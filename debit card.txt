@@ -1,0 +1,39 @@
+package com.example.apppage
+
+import andriodx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.braintreepayments.cardform.view.CardForm
+
+
+class MainActivity : ComponentActivity() {
+
+    private lateinit var cardForm: CardForm
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        cardForm = findViewById(R.id.cardForm)
+        cardForm.cardRequired(true)
+            .expirationRequired(true)
+            .cvvRequired(true)
+            .cardholderName(CardForm.FIELD_REQUIRED)
+            .actionLable("Purchase")
+            .setup(this@MainActivity)
+        cardForm.cvvEditText.inputtype =
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+
+        btnBuy.setOnClickListener {
+            if (cardForm.isValid) {
+                Toast.makeText(
+                    this@MainActivity, "Card number: ${cardForm.cardNumber}" +
+                            "Card expiry date: ${cardForm.expirationDateEditText}" +
+                            "Card cvv: ${cardForm.cvv}" +
+                            "Card holder name: ${cardForm.cardholderName}" +
+                )
+            } else {
+                Toast.makeText((this@MainActivity, "Please Complete the Form", Toast.LENGTH_LONG)
+                    .show())
+            }
+        }
+    }
+}
